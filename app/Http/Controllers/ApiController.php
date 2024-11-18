@@ -2,67 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Datapengirim;
-use App\Models\Datapengukuran;
 use App\Models\Datahasil;
+use App\Models\Datapengirim;
+use Illuminate\Http\Request;
+use App\Models\Datapengukuran;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
     public function receiveData(Request $request)
-    {
-        DB::beginTransaction();
+{
+    DB::beginTransaction();
 
-        try {
-            $data = $request->json()->all();
+    try {
+        // Dapatkan data JSON dari request
+        $data = $request->json()->all();
 
-            foreach ($data as $hasil) {
-                // Check if the user exists in Datapengirim
-                $pengirim = Datapengirim::firstOrCreate(
-                    ['nama_observant' => $hasil['namaObservant']],
-                    [
-                        'jabatan' => $hasil['jabatan'],
-                        'tgllahir' => $hasil['tglLahir'],
-                        'nama_perusahaan' => $hasil['namaPerusahaan']
-                    ]
-                );
+        // Check or create the Datapengirim entry
+        $pengirim = Datapengirim::firstOrCreate(
+            ['nama_observant' => $data['namaobservant']],
+            [
+                'tgllahir' => $data['tgllahir'],
+                'nama_perusahaan' => $data['namaPerusahaan']
+            ]
+        );
 
-                // Create Datapengukuran
-                $pengukuran = Datapengukuran::create([
-                    'namadata' => $hasil['ID'], // Assuming 'ID' is unique for each measurement
-                    'tanggal' => $hasil['tanggal'],
-                    'lokasi' => $hasil['lokasi'],
-                    'jenistest' => $hasil['jenistest'],
-                    'ratarata' => $hasil['rataRata'],
-                    'hasil' => $this->getHasilText($hasil['rataRata']),
-                    'gagal' => $hasil['gagal'],
-                    'nama_observant' => $hasil['namaObservant']
-                ]);
+        // Create the Datapengukuran entry
+        $pengukuran = Datapengukuran::create([
+            'namadata' => $data['namadata'],
+            'tanggal' => $data['tanggal'],
+            'lokasi' => $data['lokasi'],
+            'jenistest' => $data['jenistest'],
+            'ratarata' => $data['rata_rata'],
+            'hasil' => $this->getHasilText($data['rata_rata']),
+            'gagal' => $data['gagal'],
+            'nama_observant' => $data['namaobservant']
+        ]);
 
-                // Create Datahasil entries
-                foreach ($hasil['hasilData'] as $index => $value) {
-                    Datahasil::create([
-                        'nomor' => $index + 1,
-                        'waktu_milidetik' => $value,
-                        'namadata' => $hasil['ID']
-                    ]);
-                }
-            }
-
-            DB::commit();
-            return response()->json(['message' => 'Data received and saved successfully'], 200);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['message' => 'Error saving data: ' . $e->getMessage()], 500);
+        // Loop over each entry in the 'jeda' array and create a Datahasil entry
+        foreach ($data['jeda'] as $index => $value) {
+            Datahasil::create([
+                'nomor' => $index + 1,
+                'waktu_milidetik' => $value,
+                'namadata' => $data['namadata'] // Foreign Key reference to Datapengukuran
+            ]);
         }
-    }
 
-    private function getHasilText($rataRata)
-    {
-        if ($rataRata < 240) return 'Normal';
-        if ($rataRata < 480) return 'Ringan';
-        if ($rataRata < 540) return 'Sedang';
-        return 'Berat';
+        DB::commit();
+        return response()->json(['message' => 'Data received and saved successfully'], 200);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['message' => 'Error saving data: ' . $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
     }
+}
+
+// Fungsi tambahan untuk mendapatkan hasil teks dari ratarata
+private function getHasilText($rataRata)
+{
+    if ($rataRata < 240) return 'Normal';
+    if ($rataRata < 480) return 'Ringan';
+    if ($rataRata < 540) return 'Sedang';
+    return 'Berat';
+}
+
 }

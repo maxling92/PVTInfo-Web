@@ -29,7 +29,6 @@
             <tr>
                 <th scope="col"><a href="{{ route('datapengukuran.analyze', ['nama_observant' => $pengirim->nama_observant, 'sort_by' => 'nama_data', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Nama Data</a></th>
                 <th scope="col"><a href="{{ route('datapengukuran.analyze', ['nama_observant' => $pengirim->nama_observant, 'sort_by' => 'tanggal', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Tanggal</a></th>
-                <th scope="col"><a href="{{ route('datapengukuran.analyze', ['nama_observant' => $pengirim->nama_observant, 'sort_by' => 'waktu', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Waktu</a></th>
                 <th scope="col"><a href="{{ route('datapengukuran.analyze', ['nama_observant' => $pengirim->nama_observant, 'sort_by' => 'lokasi', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Lokasi</a></th>
                 <th scope="col"><a href="{{ route('datapengukuran.analyze', ['nama_observant' => $pengirim->nama_observant, 'sort_by' => 'jenistest', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Jenis Test</a></th>
                 <th scope="col"><a href="{{ route('datapengukuran.analyze', ['nama_observant' => $pengirim->nama_observant, 'sort_by' => 'ratarata', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Rata-rata</a></th>
@@ -40,7 +39,6 @@
                 <tr>
                     <td>{{ $datapengukuran->nama_data }}</td>
                     <td>{{ $datapengukuran->tanggal }}</td>
-                    <td>{{ $datapengukuran->waktu }}</td>
                     <td>{{ $datapengukuran->lokasi }}</td>
                     <td>{{ $datapengukuran->jenistest }}</td>
                     <td>{{ $datapengukuran->ratarata }}</td>

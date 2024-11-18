@@ -20,6 +20,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Perusahaan</th>
                         <th>Current Role</th>
                         <th>Change Role</th>
                     </tr>
@@ -29,6 +30,7 @@
                     <tr>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->nama_perusahaan }}</td>
                         <td>{{ ucfirst($user->role ?? 'No Role Assigned') }}</td>
                         <td>
                             <!-- Change Role Button -->

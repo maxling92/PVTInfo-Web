@@ -2,26 +2,19 @@
 
 @section('container')
     <h1>{{ $title }}</h1>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Filter Form -->
     <form id="filter-form" method="GET" action="{{ $action }}">
         <div class="row">
-            <!-- Filter By Kategori Field -->
-            <div class="col-md-3">
-                <select name="kategori" class="form-control">
-                    <option value="">Filter By Kategori</option>
-                    @foreach($filterOptions as $option)
-                        <option value="{{ $option['value'] }}" {{ request('kategori') == $option['value'] ? 'selected' : '' }}>{{ $option['label'] }}</option>
-                    @endforeach
-                </select>
-            </div>
-
             <!-- Date Range Fields -->
             <div class="col-md-3">
-                <input type="date" name="tgl_from" class="form-control" value="{{ request('tgl_from') }}">
+                <label for="tgl_from">Dari</label>
+                <input type="date" id="tgl_from" name="tgl_from" class="form-control" value="{{ request('tgl_from') }}">
             </div>
             <div class="col-md-3">
-                <input type="date" name="tgl_to" class="form-control" value="{{ request('tgl_to') }}">
+                <label for="tgl_to">Hingga</label>
+                <input type="date" id="tgl_to" name="tgl_to" class="form-control" value="{{ request('tgl_to') }}">
             </div>
 
             <!-- Filter Button -->
@@ -43,20 +36,6 @@
                     Nama Observant
                     <a href="#" class="sort-icon" data-sort="nama_observant">
                         @if(request('sort_by') == 'nama_observant')
-                            @if(request('sort_order') == 'asc')
-                                ▲
-                            @else
-                                ▼
-                            @endif
-                        @else
-                            ↕
-                        @endif
-                    </a>
-                </th>
-                <th>
-                    Jabatan
-                    <a href="#" class="sort-icon" data-sort="jabatan">
-                        @if(request('sort_by') == 'jabatan')
                             @if(request('sort_order') == 'asc')
                                 ▲
                             @else
@@ -91,12 +70,18 @@
                             {{ $data->nama_observant }}
                         </a>
                     </td>
-                    <td data-field="jabatan">{{ $data->jabatan }}</td>
                     <td data-field="tgllahir">{{ \Carbon\Carbon::parse($data->tgllahir)->format('d-m-Y') }}</td>
+                    @if(Auth::user()->role === 'admin')
                     <td>
-                        <button class="btn btn-sm btn-warning edit-btn" data-bs-toggle="modal" data-bs-target="#EditPengirim" data-id="{{ $data->id }}">Edit</button>
+                        <button class="btn btn-sm btn-warning edit-btn"
+                            data-id="{{ $data->id }}"
+                            data-nama-observant="{{ $data->nama_observant }}"
+                            data-tgllahir="{{ $data->tgllahir }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#EditPengirimModal">Edit</button>
                         <button class="btn btn-sm btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#DeletePengirim" data-id="{{ $data->id }}">Hapus</button>
                     </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>
@@ -104,8 +89,8 @@
 
     {{ $inputdata->links() }}
 
-    @include('DataPengirim.DeletePengirim')
-    @include('DataPengirim.EditPengirim')
+    @include('DeletePengirim')
+    @include('EditPengirim')
 
     <script src="{{ asset('js/sort.js') }}"></script>
     <script src="{{ asset('js/Datapengirim.js') }}"></script>

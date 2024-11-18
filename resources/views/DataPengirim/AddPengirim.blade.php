@@ -16,10 +16,6 @@
                         <label for="tgllahir" class="form-label">Tanggal Lahir:</label>
                         <input type="text" class="form-control" id="tgllahir" name="tgllahir" placeholder="dd-MM-yyyy" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="jabatan" class="form-label">Posisi:</label>
-                        <input type="text" class="form-control" id="jabatan" name="jabatan" required>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

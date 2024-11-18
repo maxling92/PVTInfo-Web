@@ -24,7 +24,7 @@
 <script>
     function setDeleteFormAction(id) {
         const form = document.getElementById('deleteForm');
-        form.action = `/datapengirim/${id}`;
+        form.action = `/Data` + id;
     }
 
     document.querySelectorAll('.delete-btn').forEach(button => {

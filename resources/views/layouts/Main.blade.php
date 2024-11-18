@@ -32,6 +32,7 @@
               <li class="nav-item">
                 <a class="nav-link {{ ($title === "Home") ? 'active' : '' }}" href="/">Home</a>
               </li>
+              @if (Auth::check())
               <li class="nav-item">
                 <a class="nav-link" href="/Data">Input Data</a>
               </li>
@@ -40,7 +41,8 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ route('perusahaan.index') }}">Daftar Perusahaan</a>
-              </li>
+              </li>    
+              @endif
             </ul>
             <ul class="navbar-nav ms-auto">
               @auth

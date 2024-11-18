@@ -12,10 +12,14 @@ class DatapengirimController extends Controller
 {
     public function index(Request $request)
     {
+
+        if (Auth::user()->role === 'owner') {
+            return redirect('/')->with('error', 'Anda tidak memiliki akses untuk melihat data pengirim.');
+        }
+
         $searchQuery = $request->query('search');
         $sortBy = $request->query('sort_by');
         $sortOrder = $request->query('sort_order', 'asc');
-        $filterPengguna = $request->query('kategori');
         $tglFrom = $request->query('tgl_from');
         $tglTo = $request->query('tgl_to');
 
@@ -31,10 +35,6 @@ class DatapengirimController extends Controller
             }
         }
 
-        if ($filterPengguna) {
-            $query->where('jabatan', $filterPengguna);
-        }
-
         if ($tglFrom && $tglTo) {
             $query->whereBetween('tgllahir', [$tglFrom, $tglTo]);
         }
@@ -46,7 +46,7 @@ class DatapengirimController extends Controller
 
         $action = route('datapengirim.index'); 
 
-        return view('DataPengirim.inputdata', [ 
+        return view('DataPengirim.Inputdata', [ 
             'inputdata' => $datapengirims, 
             'title' => 'Input Data',
             'action' => $action,
@@ -54,13 +54,8 @@ class DatapengirimController extends Controller
             'searchAction' => $action,
             'sortOptions' => [
                 ['value' => 'nama_observant', 'label' => 'Nama'],
-                ['value' => 'jabatan', 'label' => 'Kategori'],
                 ['value' => 'tgllahir', 'label' => 'tgllahir']
             ],
-            'filterOptions' => [
-                ['value' => 'Supir Senior', 'label' => 'Supir Senior'],
-                ['value' => 'Supir Junior', 'label' => 'Supir Junior']
-            ]
         ]);
     }
 
@@ -70,10 +65,6 @@ class DatapengirimController extends Controller
     $user = Auth::user();
     $query = Datapengirim::where('nama_perusahaan', $user->nama_perusahaan);
 
-    // Apply filtering based on user input from inputdata
-    if ($request->has('jabatan') && $request->jabatan !== '') {
-        $query->where('jabatan', $request->query('jabatan'));
-    }
 
     if ($request->has('tgllahir') && $request->tgllahir !== '') {
         $query->where('tgllahir', $this->formattedDate($request->query('tgllahir')));
@@ -98,6 +89,8 @@ class DatapengirimController extends Controller
         $totalRataRata = $pengirim->datapengukurans->sum('ratarata');
         $countDatapengukurans = $pengirim->datapengukurans->count();
         $avg_pengirim = $countDatapengukurans ? $totalRataRata / $countDatapengukurans : 0;
+
+        $avg_pengirim = round($avg_pengirim, 2);
 
         if ($avg_pengirim <= 300) {
             $fatigueCategories['safe']++;
@@ -125,7 +118,6 @@ class DatapengirimController extends Controller
         'datapengirims' => $datapengirims,
         'avg_pengirims' => $avg_pengirims,
         'filters' => [
-            'jabatan' => $request->query('jabatan'),
             'tgllahir' => $request->query('tgllahir'),
         ],
         'xValues' => $xValues,
@@ -159,11 +151,15 @@ private function formattedDate($date)
 
     public function store(Request $request)
     {
+
+        Log::info('Request data:', $request->all());
+
         $request->validate([
             'nama_observant' => 'required|string|max:255',
             'tgllahir' => 'required|date_format:d-m-Y',
-            'jabatan' => 'required|string|max:255',
         ]);
+
+        Log::info('Validation passed');
 
         $date = \DateTime::createFromFormat('d-m-Y', $request->tgllahir);
         $formattedDate = $date->format('Y-m-d');
@@ -171,7 +167,6 @@ private function formattedDate($date)
         $datapengirim = new Datapengirim(); 
         $datapengirim->nama_observant = $request->nama_observant;
         $datapengirim->tgllahir = $formattedDate;
-        $datapengirim->jabatan = $request->jabatan;
         $datapengirim->nama_perusahaan = Auth::user()->nama_perusahaan;
         $datapengirim->save();
 
@@ -189,17 +184,16 @@ private function formattedDate($date)
         $request->validate([
             'nama_observant' => 'required|string|max:255',
             'tgllahir' => 'required|date_format:Y-m-d',
-            'jabatan' => 'required|string|max:255',
         ]);
 
         $datapengirim = Datapengirim::findOrFail($id);
 
-        $datapengirim->nama_observant = $request->nama_observant;
-        $datapengirim->tgllahir = $request->tgllahir;
-        $datapengirim->jabatan = $request->jabatan;
+        $datapengirim->nama_observant = $request->input('nama_observant');
+        $datapengirim->tgllahir = $request->input('tgllahir');
         $datapengirim->save();
 
-        return redirect('/Data')->with('sukses', 'Data berhasil diupdate.');
+        return redirect()->route('datapengirim.index')->with('sukses', 'Data berhasil diupdate.');
+
     }
 
 

@@ -8,9 +8,6 @@
 <div class="mb-3">
     <strong>Filter:</strong>
     <ul>
-        @if ($filters['jabatan'])
-            <li>Jabatan: {{ $filters['jabatan'] }}</li>
-        @endif
         @if ($filters['tgllahir'])
             <li>Tanggal Lahir: {{ $filters['tgllahir'] }}</li>
         @endif
@@ -22,7 +19,6 @@
         <thead>
             <tr>
                 <th scope="col"><a href="{{ route('datapengirim.groupAnalysis', ['sort_by' => 'nama_observant', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Nama Observant</a></th>
-                <th scope="col"><a href="{{ route('datapengirim.groupAnalysis', ['sort_by' => 'jabatan', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Jabatan</a></th>
                 <th scope="col"><a href="{{ route('datapengirim.groupAnalysis', ['sort_by' => 'tgllahir', 'sort_direction' => request('sort_direction') == 'asc' ? 'desc' : 'asc']) }}">Tanggal Lahir</a></th>
                 <th scope="col">Rata-rata</th>
             </tr>
@@ -31,7 +27,6 @@
             @foreach($datapengirims as $pengirim)
                 <tr>
                     <td>{{ $pengirim->nama_observant }}</td>
-                    <td>{{ $pengirim->jabatan }}</td>
                     <td>{{ $pengirim->tgllahir }}</td>
                     <td>{{ $avg_pengirims->firstWhere('nama_observant', $pengirim->nama_observant)['avg_pengirim'] }}</td>
                 </tr>

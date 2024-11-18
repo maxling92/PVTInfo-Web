@@ -10,7 +10,6 @@ class Datahasil extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nomor',
         'waktu_milidetik',
         'namadata'
 

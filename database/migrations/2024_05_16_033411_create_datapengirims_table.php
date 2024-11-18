@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('datapengirims', function (Blueprint $table) {
             $table->id();
             $table->string('nama_observant')->unique();
-            $table->string('jabatan');
             $table->date('tgllahir');
             $table->string('nama_perusahaan');
             $table->timestamps();

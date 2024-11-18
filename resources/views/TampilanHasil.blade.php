@@ -18,9 +18,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($datahasils as $datahasil)
+            @foreach ($datahasils as $index => $datahasil)
                 <tr>
-                    <td>{{ $datahasil->nomor }}</td>
+                    <td>{{ $index + 1 }}</td> <!-- Nomor otomatis -->
                     <td>{{ $datahasil->waktu_milidetik }}</td>
                 </tr>
             @endforeach

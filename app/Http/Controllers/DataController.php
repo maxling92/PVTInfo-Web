@@ -15,7 +15,7 @@ class DataController extends Controller
         $user = Auth::user();
         $inputdata = Datapengirim::where('nama_perusahaan', $user->nama_perusahaan)->get();
 
-        return view('Inputdata', [
+        return view('Datapengirim.Inputdata', [
             "title" => "Input dan Analisis Data",
             "inputdata" => $inputdata
         ]);

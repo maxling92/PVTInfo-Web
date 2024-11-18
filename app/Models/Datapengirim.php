@@ -11,7 +11,6 @@ class Datapengirim extends Model
 
     protected $fillable = [
         'nama_observant',
-        'jabatan',
         'tgllahir',
         'nama_perusahaan'
 

@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
+            'csrf' => \App\Http\Middleware\VerifyCsrfToken::class,
             'owner' => \App\Http\Middleware\OwnerMiddleware::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
 
