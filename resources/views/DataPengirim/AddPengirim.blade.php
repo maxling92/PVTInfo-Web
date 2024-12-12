@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <div class="modal fade" id="AddPengirim" tabindex="-1" aria-labelledby="AddPengirimLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -14,7 +17,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="tgllahir" class="form-label">Tanggal Lahir:</label>
-                        <input type="text" class="form-control" id="tgllahir" name="tgllahir" placeholder="dd-MM-yyyy" required>
+                        <input type="date" class="form-control flatpickr" id="tgllahir" name="tgllahir" placeholder="dd-MM-yyyy" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -25,3 +28,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr(".flatpickr", {
+            dateFormat: "d-m-Y" // Format dd-MM-yyyy
+        });
+    });
+</script>

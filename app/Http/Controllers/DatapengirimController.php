@@ -12,7 +12,6 @@ class DatapengirimController extends Controller
 {
     public function index(Request $request)
     {
-
         if (Auth::user()->role === 'owner') {
             return redirect('/')->with('error', 'Anda tidak memiliki akses untuk melihat data pengirim.');
         }
@@ -20,8 +19,8 @@ class DatapengirimController extends Controller
         $searchQuery = $request->query('search');
         $sortBy = $request->query('sort_by');
         $sortOrder = $request->query('sort_order', 'asc');
-        $tglFrom = $request->query('tgl_from');
-        $tglTo = $request->query('tgl_to');
+        $ageFrom = $request->query('age_from'); 
+        $ageTo = $request->query('age_to');      
 
         $query = Datapengirim::query(); 
 
@@ -35,8 +34,10 @@ class DatapengirimController extends Controller
             }
         }
 
-        if ($tglFrom && $tglTo) {
-            $query->whereBetween('tgllahir', [$tglFrom, $tglTo]);
+        if ($ageFrom !== null && $ageTo !== null) {
+            $query->whereRaw("FLOOR(DATEDIFF(?, tgllahir) / 365.25) BETWEEN ? AND ?", [
+                Carbon::now()->format('Y-m-d'), $ageFrom, $ageTo
+            ]);
         }
 
         $user = Auth::user(); 
@@ -54,7 +55,7 @@ class DatapengirimController extends Controller
             'searchAction' => $action,
             'sortOptions' => [
                 ['value' => 'nama_observant', 'label' => 'Nama'],
-                ['value' => 'tgllahir', 'label' => 'tgllahir']
+                ['value' => 'tgllahir', 'label' => 'Tanggal Lahir']
             ],
         ]);
     }

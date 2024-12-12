@@ -33,9 +33,11 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/Data/{nama_observant}', [DatapengukuranController::class, 'index'])->name('datapengukuran.index'); 
     Route::get('/Data/analisiskelompok/{nama_observant}', [DatapengukuranController::class, 'analyze'])->name('datapengukuran.analyze');
+    Route::delete('/Data/Pengukuran/{id}', [DatapengukuranController::class, 'destroy'])->name('datapengukuran.destroy');
 
     Route::get('/profile', [UserController::class, 'show'])->name('profile.show');
     Route::resource('user', UserController::class);
+    Route::delete('/profile/{user}', [UserController::class, 'destroy'])->name('profile.destroy');
 
 });
 
@@ -46,7 +48,10 @@ Route::post('/logout', [LoginController::class, 'logout'] );
 Route::get('/register', [RegisterController::class, 'index'] )->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store'] );
 
-Route::get('/verify', [RegisterController::class, 'showVerifyForm'])->name('verify.show');
+Route::get('/verify', function () {
+ return view('Verify');
+})->name('verify.show');
+Route::post('/verify', [RegisterController::class, 'verify'])->name('verify');
 
 
 

@@ -210,7 +210,16 @@ class DatapengukuranController extends Controller
         'trend' => $trend,
         'fatigueMessage' => $fatigueMessage,
     ]);
-}
+    }
+
+    public function destroy($id)
+    {
+        $datapengukuran = Datapengukuran::findOrFail($id); 
+        $datapengukuran->delete(); 
+
+        // Redirect atau response JSON untuk AJAX
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
 
 
 

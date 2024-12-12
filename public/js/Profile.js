@@ -33,4 +33,26 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#deleteUserButton').on('click', function(event) {
+        event.preventDefault();
+        if (confirm('Apakah Anda yakin ingin menghapus akun Anda?')) {
+            $.ajax({
+                url: '/user/' + userId, // Pastikan userId adalah ID pengguna yang ingin dihapus
+                type: 'DELETE', // Metode HTTP harus DELETE
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF wajib
+                },
+                success: function(response) {
+                    alert('Akun berhasil dihapus.');
+                    window.location.href = '/'; // Arahkan ke halaman lain jika diperlukan
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                    alert('Gagal menghapus akun. Coba lagi.');
+                }
+            });
+        }
+    });
+    
 });

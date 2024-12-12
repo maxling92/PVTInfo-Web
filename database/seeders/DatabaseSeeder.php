@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
                     $totalWaktuMilidetik += $waktu_milidetik;
 
                     $datahasils->push(new Datahasil([
-                        'nomor' => $j,
                         'waktu_milidetik' => $waktu_milidetik,
                     ]));
                 }

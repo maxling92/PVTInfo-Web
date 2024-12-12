@@ -7,14 +7,14 @@
     <!-- Filter Form -->
     <form id="filter-form" method="GET" action="{{ $action }}">
         <div class="row">
-            <!-- Date Range Fields -->
             <div class="col-md-3">
-                <label for="tgl_from">Dari</label>
-                <input type="date" id="tgl_from" name="tgl_from" class="form-control" value="{{ request('tgl_from') }}">
+                <label for="age_from">Usia Minimum</label>
+                <input type="number" id="age_from" name="age_from" min="0" value="{{ request('age_from') }}">
             </div>
+            
             <div class="col-md-3">
-                <label for="tgl_to">Hingga</label>
-                <input type="date" id="tgl_to" name="tgl_to" class="form-control" value="{{ request('tgl_to') }}">
+                <label for="age_to">Usia Maksimum</label>
+                <input type="number" id="age_to" name="age_to" min="0" value="{{ request('age_to') }}">
             </div>
 
             <!-- Filter Button -->

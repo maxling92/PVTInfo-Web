@@ -35,9 +35,10 @@
                     <label for="jenistest" class="form-label">Jenis Test</label>
                     <select id="jenistest" name="jenistest" class="form-select">
                         <option value="">Filter by Jenis Test</option>
-                        <option value="VISUAL" {{ $filterJenistest == 'VISUAL' ? 'selected' : '' }}>VISUAL</option>
-                        <option value="AUDIO" {{ $filterJenistest == 'AUDIO' ? 'selected' : '' }}>AUDIO</option>
+                        <option value="1" {{ $filterJenistest == '1' ? 'selected' : '' }}>VISUAL</option>
+                        <option value="2" {{ $filterJenistest == '2' ? 'selected' : '' }}>AUDIO</option>
                     </select>
+
                 </div>
                 <div class="col-md-12 mt-2">
                     <button type="submit" class="btn btn-primary">Apply</button>
@@ -93,12 +94,27 @@
                     <td><a href="{{ route('data.Hasil', ['namadata' => $datapengukuran->namadata]) }}">{{ $datapengukuran->namadata }}</a></td>
                     <td>{{ $datapengukuran->tanggal }}</td>
                     <td>{{ $datapengukuran->lokasi }}</td>
-                    <td>{{ $datapengukuran->jenistest }}</td>
+                    <td>
+                        @if($datapengukuran->jenistest == 1)
+                        VISUAL
+                        @elseif($datapengukuran->jenistest == 2)
+                        AUDIO
+                        @else
+                        UNKNOWN
+                        @endif
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $datapengukuran->id }}" data-url="{{ route('datapengukuran.destroy', $datapengukuran->id) }}"  
+                        data-bs-toggle="modal" data-bs-target="#DeletePengukuran"> Hapus
+                        </button>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
+
+@include('DeletePengukuran')
 
 <script src="{{ asset('js/sort.js') }}"></script>
 @endsection

@@ -12,21 +12,23 @@ use Illuminate\Support\Facades\Log;
 class ApiController extends Controller
 {
     public function receiveData(Request $request)
+    
 {
     DB::beginTransaction();
 
     try {
         // Dapatkan data JSON dari request
         $data = $request->json()->all();
+        Log::info('Received data:', $data);
 
-        // Check or create the Datapengirim entry
-        $pengirim = Datapengirim::firstOrCreate(
-            ['nama_observant' => $data['namaobservant']],
-            [
-                'tgllahir' => $data['tgllahir'],
-                'nama_perusahaan' => $data['namaPerusahaan']
-            ]
-        );
+        $pengirim = Datapengirim::where('nama_observant', $data['namaobservant'])->first();
+
+        // Jika tidak ditemukan, kembalikan error
+        if (!$pengirim) {
+            return response()->json([
+                'message' => 'Error: nama_observant tidak ditemukan di database.',
+            ], 400);
+        }
 
         // Create the Datapengukuran entry
         $pengukuran = Datapengukuran::create([

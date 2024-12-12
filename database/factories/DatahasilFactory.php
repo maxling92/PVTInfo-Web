@@ -12,8 +12,7 @@ class DatahasilFactory extends Factory
     public function definition()
     {
         return [
-            'nomor' => $this->faker->numberBetween(1, 20),  
-            'waktu_milidetik' => $this->faker->numberBetween(230, 1000),
+         'waktu_milidetik' => $this->faker->numberBetween(230, 1000),
         ];
     }
 }
